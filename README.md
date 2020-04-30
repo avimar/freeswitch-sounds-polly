@@ -17,13 +17,15 @@ Limitations:
  - Highest quality sounds they produce is only 24000, whereas FreeSWITCH sounds come with 48000.
  
 Contributing:
-- How to get the best audio quality?
+- Audiophile/knowledge: How to get the best audio quality?
  - - 24000 only comes from OGG/MP3, but we want WAV/PCM for raw audio -- we should convert -- from mp3 or ogg?
  - - Is downsampling 16000 PCM to 8000 with sox just as good as re-generating at 8000?
  - - If you're an audiophile or know how FreeSWITCH handles audio, check the various files in the conference folder.
-- Test mod_say for numbers and currencies.
+- FreeSWICH testing: Test mod_say for numbers and currencies.
 - - Do the files flow together?
 - - If so, how do we fix it? And automate it? Maybe the non-neural ones are better for numbers?
+- Coding: Add an XML reader to load a phrases.xml file to pass the audio and save path
+- Coding: `node` or `.sh` script to run sox on each directory to produce the lower level recordings
  
 How to generate more audio:
 - You'll need to save your amazon credentials in `creds.ini`
