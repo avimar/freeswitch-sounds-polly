@@ -22,6 +22,65 @@ questions
 you-are-number
 
 
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+30
+40
+50
+60
+70
+80
+90
+dot
+h-1
+h-2
+h-3
+h-4
+h-5
+h-6
+h-7
+h-8
+h-9
+h-10
+h-11
+h-12
+h-13
+h-14
+h-15
+h-16
+h-17
+h-18
+h-19
+h-20
+h-30
+hundred
+thousand
+million
+period
+point
+pound
+star
+
+
 cd conference/
 
 cd 24000-mp3 && sox $0.mp3 ../16000-from-mp3/$0.wav rate 16000
