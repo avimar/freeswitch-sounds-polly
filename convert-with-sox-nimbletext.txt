@@ -1,0 +1,32 @@
+all-students-muted
+conf-bad-number
+conf-being_recorded
+conf-enter_conf_number
+conf-goodbye
+conf-hand-lowered
+conf-hand-raised
+conf-listener_in_conference
+conf-listeners_in_conference
+conf-muted
+conf-unmuted
+conf-waiting-moderator
+line-closed
+line-open
+listeners
+listener
+no questions removed
+question-asked
+question-removed
+questions-removed
+questions
+you-are-number
+
+
+cd conference/
+
+cd 24000-mp3 && sox $0.mp3 ../16000-from-mp3/$0.wav rate 16000
+cd 24000-mp3 && sox $0.mp3 ../8000-from-mp3/$0.wav rate 8000
+
+
+cd 24000-ogg && sox $0.ogg ../16000-from-ogg/$0.wav rate 16000
+cd 24000-ogg && sox $0.ogg ../8000-from-24000-ogg/$0.wav rate 8000
