@@ -7,6 +7,8 @@ Motivation:
  - - Polly licence allows you to re-use the files
      >Q. Can I use the service for generating static voice prompts that will be replayed multiple times?
      >Yes, you can. The service does not restrict this and there are no additional costs for doing so. https://aws.amazon.com/polly/faqs/
+
+     > You can cache and save Polly’s speech audio to replay offline or redistribute. https://docs.aws.amazon.com/whitepapers/latest/aws-overview/machine-learning.html
  - - Voices, especially Neural, are pretty high quality
  - - Multiple languages with the same API
  - - Pretty cheap
