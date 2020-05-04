@@ -179,6 +179,24 @@ var polly = new Polly ('./creds.ini', );
 list = Object.entries(list);
 //list.forEach(s=> polly.saveFile(s[1],s[0]));
 
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+
+/*  try {
+    const { stdout, stderr } = await exec('ls');
+    console.log('stdout:', stdout);
+    console.log('stderr:', stderr);
+  } catch (e) {
+    console.error(e); // should contain code (exit code) and signal (that caused the termination).
+  }
+}*/
+
+//list = [list[0]];
+
+
+
+
 Promise.map(list
 	, s=>polly.saveFile(s[1],s[0])
+	//,s=>exec(`sox Matthew-neural/ivr/16000/${s[0]}.wav Matthew-neural/ivr/8000/${s[0]}.wav rate 8000`)
 	, {concurrency:1});
