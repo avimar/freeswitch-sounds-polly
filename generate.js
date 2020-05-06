@@ -174,6 +174,19 @@ const listDigits={
 }
 
 
+var currency={
+	"and": "And"
+	,"cent": "Cent"
+	,"central": "Central"
+	,"cents-per-minute": "cents per minute"
+	,"1-cent-per-minute": "1 cent per minute"
+	,"cents": "Cents"
+	,"dollar": "Dollar"
+	,"dollars": "Dollars"
+	,"minus": "Minus"
+	,"negative": "Negative"
+	};
+
 var polly = new Polly ('./creds.ini', );
 
 list = Object.entries(list);
