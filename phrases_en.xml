@@ -180,7 +180,7 @@
       <prompt phrase="Second" filename="second.wav"/>
       <prompt phrase="Seconds" filename="seconds.wav"/>
       <prompt phrase="January" filename="mon-0.wav"/>
-      <prompt phrase="Febuary" filename="mon-1.wav"/>
+      <prompt phrase="Febuary" filename="mon-1.wav" polly="Feb"/>
       <prompt phrase="March" filename="mon-2.wav"/>
       <prompt phrase="April" filename="mon-3.wav"/>
       <prompt phrase="May" filename="mon-4.wav"/>
