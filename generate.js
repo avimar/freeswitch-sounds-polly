@@ -47,30 +47,35 @@ function Polly (credentials,region){
 		};
 	console.log("Initialized with voice",this._say.VoiceId,this._say.Engine);
 
+	this.generatePath = function(file, folder){
+		var extension;
+		if(this._say.OutputFormat=="pcm") extension='.wav';
+		else if(this._say.OutputFormat=="ogg_vorbis") extension='.ogg';
+		else extension='.'+this._say.OutputFormat;
+
+		var savePathFile = this._say.VoiceId + '-' + this._say.Engine + '/';
+		if(folder) savePathFile = savePathFile + folder + '/';//add folder if we set one
+		savePathFile = savePathFile + (this._say.SampleRate||16000)+'/'+ file + extension;
+		console.log(savePathFile);
+		return savePathFile;
+		}
 	this.saveFile = function (text, file, folder){
 		var parent = this;
 		return new Promise(async function (resolve, reject) {
-			var extension;
-			if(parent._say.OutputFormat=="pcm") extension='.wav';
-			else if(parent._say.OutputFormat=="ogg_vorbis") extension='.ogg';
-			else extension='.'+parent._say.OutputFormat;
-			
-			var fileName = parent._say.VoiceId + '-' + parent._say.Engine + '/';
-			if(folder) fileName = fileName + folder + '/';//add folder if we set one
-			fileName = fileName + (parent._say.SampleRate||16000)+'/'+ file + extension;
-			console.log(fileName);
+
+			const savePathFile = parent.generatePath(file, folder);
 
 			//make sure folder exists
-			await fs.promises.mkdir(path.dirname(fileName), { recursive: true })
+			await fs.promises.mkdir(path.dirname(savePathFile), { recursive: true })
 
 			var saveFileStream;
 			if(parent._say.OutputFormat=="pcm"){//if PCM, then save as .wav with proper headers
-				saveFileStream = new FileWriter(fileName, {
+				saveFileStream = new FileWriter(savePathFile, {
 					sampleRate: parent._say.SampleRate||16000,//it's set to 8k or default 16k
 					channels: 1
 					});
 				}
-			else saveFileStream = fs.createWriteStream(fileName);
+			else saveFileStream = fs.createWriteStream(savePathFile);
 
 			parent._say.Text = text;
 			//this._say.Text = '<speak><amazon:domain name="news">'+utterance+'</amazon:domain></speak> '; //<amazon:domain name="conversational">
@@ -105,8 +110,19 @@ function Polly (credentials,region){
 var polly = new Polly ('./creds.ini', );
 
 const allTypes = [ 'ascii', 'phonetic-ascii', 'digits', 'currency', 'time', 'voicemail', 'directory', 'conference', 'ivr', 'misc', 'base256', 'zrtp' ];
-const allPhrases = require('./load-phrases-xml.js');
 //each category is an array, with objects of:  phrase & filename { phrase: 'And', filename: 'and' }
+const allPhrases = require('./load-phrases-xml.js');
+
+//list = [{phrase:"For information about FreeSWITCH, press", filename:"misc-information_about_freeswitch"}];
+//list = [{phrase:'<speak>Some audio is difficult to hear in a moving vehicle, but <amazon:effect name="drc"> this audio is less difficult to hear in a moving vehicle.</amazon:effect> </speak>', filename:"test-drc"}];
+
+/************ Activation code -- sets the category, list of files, and which function to run ******************/
+const category= 'directory'
+var list = allPhrases['directory'];
+runTTS().then(runConversion);
+
+
+
 
 /* Try these with SSML?
 ,"ivr-you_are_number_one" : "You are caller number one. Of course, *every* caller is number one in our book so you may be waiting a while."
@@ -114,10 +130,6 @@ const allPhrases = require('./load-phrases-xml.js');
 ,"ivr-it_was_that_bug" : "Well I'll be a monkey's bitch! It *was* that bug!"
 */
 
-//list.forEach(s=> polly.saveFile(s[1],s[0]));
-
-const list = allPhrases.conference;
-const category= 'conference'
 //const category="class";
 /*list = [
 		//['Please hold on the line for your class to start.','hold-wait-teacher','class']
@@ -127,19 +139,33 @@ const category= 'conference'
 		];*/
 
 
-Promise.map(list
-	, function(data){
-		return polly.saveFile(data.phrase, data.filename, category);
-		//console.log(data.phrase, data.filename, category);
+function runTTS(){
+	return Promise.map(list
+		, function(data){
+			return polly.saveFile(data.phrase, data.filename, category);
+			//console.log(data.phrase, data.filename, category);
+			}
+		, {concurrency:3});	
 		}
-	/*,async function(data){
-		try {
-			//const { stdout, stderr } = await exec(`sox Matthew-neural/ivr/16000/${name[0]}.wav Matthew-neural/ivr/8000/${name[0]}.wav rate 8000`)`);
-			const { stdout, stderr } = await exec(`sox Matthew-neural/conference/16000/${data.filename}.wav Matthew-neural/conference/8000/${data.filename}.wav rate 8000`);
-			if(stdout) console.log('stdout:', stdout);
-			if(stderr) console.log('stderr:', stderr);
-		  } catch (e) {
-			console.error(e); // should contain code (exit code) and signal (that caused the termination).
-		  }
-		}*/
-	, {concurrency:3});
+
+
+function runConversion(){
+	return Promise.map(list
+		,async function(data){
+			try {
+				const savePathFile = polly.generatePath(data.filename, category);
+				const destinationPath = savePathFile.replace('16000','8000')
+
+				await fs.promises.mkdir(path.dirname(destinationPath), { recursive: true });
+
+				const command = `sox ${savePathFile} ${destinationPath} rate 8000`;
+				console.log(command);
+				const { stdout, stderr } = await exec(command);
+				if(stdout) console.log('stdout:', stdout);
+				if(stderr) console.log('stderr:', stderr);
+				} catch (e) {
+				console.error(e); // should contain code (exit code) and signal (that caused the termination).
+				}
+			}
+		, {concurrency:3});	
+	}
