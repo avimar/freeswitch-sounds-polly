@@ -11,6 +11,7 @@ jsonObj = jsonObj.language.en;//un-nest to our actual data
 
 //remove the unnecessary .prompt in every section 
 var keys = Object.keys(jsonObj);
+console.log(keys);
 keys.forEach(function(value){
 	jsonObj[value] = jsonObj[value].prompt;
 	})
