@@ -156,6 +156,7 @@
       <prompt phrase="Cent" filename="cent.wav"/>
       <prompt phrase="Central" filename="central.wav"/>
       <prompt phrase="Cents per minute" filename="cents-per-minute.wav"/>
+	  <prompt phrase="One cent per minute" filename="1-cent-per-minute.wav"/>
       <prompt phrase="Cents" filename="cents.wav"/>
       <prompt phrase="Dollar" filename="dollar.wav"/>
       <prompt phrase="Dollars" filename="dollars.wav"/>
