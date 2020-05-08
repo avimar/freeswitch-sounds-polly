@@ -25,6 +25,8 @@ const exec = require('util').promisify(require('child_process').exec); //for usi
 
 
 function Polly (credentials,region){
+	this._chars={standard:0, neural:0};
+	this._filesToGenerate=0;
 	var config = ini.parse (fs.readFileSync (credentials, 'utf-8'));
 	region = region ? region : config.default.aws_region; //use the ini if we don't pass in a region, giving the file preference to change on the fly
 	this._key = { accessKeyId: config.default.aws_access_key_id, secretAccessKey: config.default.aws_secret_access_key };
@@ -56,15 +58,28 @@ function Polly (credentials,region){
 		var savePathFile = this._say.VoiceId + '-' + this._say.Engine + '/';
 		if(folder) savePathFile = savePathFile + folder + '/';//add folder if we set one
 		savePathFile = savePathFile + (this._say.SampleRate||16000)+'/'+ file + extension;
-		console.log(savePathFile);
+		//console.log(savePathFile);
 		return savePathFile;
 		}
-	this.saveFile = function (text, file, folder){
+	this.saveFile = async function (text, file, folder, options={}){
+		var savePathFile = await this.generatePath(file, folder);
+		if(options.skipExisting) {
+			const alreadyExists=await fs.promises.access(savePathFile).then(s=>true).catch(s=>false);//throws if not exists, otherwise no value
+			if(alreadyExists) {
+				console.log('skipping '+savePathFile);
+				return;
+				}
+			}
+		
+		this._chars[this._say.Engine]+=text.length;
+		if(options.dryRun) {
+			console.log('would generate '+savePathFile);
+			this._filesToGenerate++;
+			return;
+			}
+
 		var parent = this;
 		return new Promise(async function (resolve, reject) {
-
-			const savePathFile = parent.generatePath(file, folder);
-
 			//make sure folder exists
 			await fs.promises.mkdir(path.dirname(savePathFile), { recursive: true })
 
@@ -91,7 +106,7 @@ function Polly (credentials,region){
 					}
 				audio.pipe (saveFileStream)
 					.on('finish',function(s){
-						console.log('finished',text);
+						console.log('finished',savePathFile,text);
 						resolve();
 						})
 					.on('error',reject);
@@ -107,19 +122,37 @@ function Polly (credentials,region){
 
 
 
-var polly = new Polly ('./creds.ini', );
+var polly = new Polly ('./creds.ini');
+process.on('exit', function (){
+	console.log(polly._chars);
+	const chars = polly._chars.standard + polly._chars.neural*4;
+	console.log("Cost: $" + (chars/1000000*4).toFixed(4));
+	if(this._filesToGenerate) console.log('DRY RUN: files to generate',this._filesToGenerate);
+	});
 
-const allTypes = [ 'ascii', 'phonetic-ascii', 'digits', 'currency', 'time', 'voicemail', 'directory', 'conference', 'ivr', 'misc', 'base256', 'zrtp' ];
+
+//LOAD THE PHRASES FILE
 //each category is an array, with objects of:  phrase & filename { phrase: 'And', filename: 'and' }
-const allPhrases = require('./load-phrases-xml.js');
-
+const allPhrases = require('./load-phrases-xml.js')('./phrases_en.xml');
+const allTypes = Object.keys(allPhrases);
 //list = [{phrase:"For information about FreeSWITCH, press", filename:"misc-information_about_freeswitch"}];
 //list = [{phrase:'<speak>Some audio is difficult to hear in a moving vehicle, but <amazon:effect name="drc"> this audio is less difficult to hear in a moving vehicle.</amazon:effect> </speak>', filename:"test-drc"}];
 
+
 /************ Activation code -- sets the category, list of files, and which function to run ******************/
-const category= 'directory'
-var list = allPhrases['directory'];
-runTTS().then(runConversion);
+//Do All Types:
+Promise.mapSeries(allTypes, async function(category){
+	console.log(category)
+	const dryRun=true;
+	const tts = await runTTS(allPhrases[category], {category:category, dryRun:dryRun,skipExisting:true});
+	if(!dryRun) tts.then(runConversion);
+
+	}, {concurrency:3})
+//const category= 'directory'
+//var list = allPhrases['ivr'];
+//list = require('./phrases-class.js');
+//runTTS({dryRun:true,skipExisting:false});
+//runTTS().then(runConversion);
 
 
 
@@ -139,10 +172,10 @@ runTTS().then(runConversion);
 		];*/
 
 
-function runTTS(){
+function runTTS(list, options){
 	return Promise.map(list
 		, function(data){
-			return polly.saveFile(data.phrase, data.filename, category);
+			return polly.saveFile(data.phrase, data.filename, options.category, options);
 			//console.log(data.phrase, data.filename, category);
 			}
 		, {concurrency:3});	
@@ -163,7 +196,8 @@ function runConversion(){
 				const { stdout, stderr } = await exec(command);
 				if(stdout) console.log('stdout:', stdout);
 				if(stderr) console.log('stderr:', stderr);
-				} catch (e) {
+				}
+			catch (e) {
 				console.error(e); // should contain code (exit code) and signal (that caused the termination).
 				}
 			}
