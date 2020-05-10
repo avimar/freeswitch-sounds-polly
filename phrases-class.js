@@ -3,6 +3,8 @@ module.exports = [
 ,{filename: "enter-class-number-7", phrase: "Please enter your 7 digit class number."}
 ,{filename: "bad-class-number", phrase: "Invalid class number, please try again."}
 
+,{filename: "already-recording", phrase: "Already Recording."}
+
 ,{phrase: 'Please hold on the line for your class to start.', filename:'hold-wait-teacher'}
 ,{phrase: 'You are currently the only person in this conference. Please wait for others to join.',filename:'hold-wait-for-others'}
 
