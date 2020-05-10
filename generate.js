@@ -143,9 +143,13 @@ const allTypes = Object.keys(allPhrases);
 //Do All Types:
 Promise.mapSeries(allTypes, async function(category){
 	console.log(category)
-	const dryRun=true;
-	const tts = await runTTS(allPhrases[category], {category:category, dryRun:dryRun,skipExisting:true});
-	if(!dryRun) tts.then(runConversion);
+	var options = {
+		category
+		,dryRun: false
+		,skipExisting: true
+		}; 
+	const tts = await runTTS(allPhrases[category], options);
+	if(!options.dryRun) runConversion(allPhrases[category],options);
 
 	}, {concurrency:3})
 //const category= 'directory'
@@ -182,12 +186,20 @@ function runTTS(list, options){
 		}
 
 
-function runConversion(){
+function runConversion(list,options){
 	return Promise.map(list
 		,async function(data){
 			try {
-				const savePathFile = polly.generatePath(data.filename, category);
-				const destinationPath = savePathFile.replace('16000','8000')
+				const savePathFile = polly.generatePath(data.filename, options.category);
+				const destinationPath = savePathFile.replace('16000','8000');
+
+				const sourceExists=await fs.promises.access(savePathFile).then(s=>true).catch(s=>false);//throws if not exists, otherwise no value
+				if(!sourceExists) return console.debug('ERROR for sox conversion: file not found '+savePathFile);
+	
+				if(options.skipExisting) {//skip converting when we have a remote file already
+					const alreadyExists=await fs.promises.access(destinationPath).then(s=>true).catch(s=>false);//throws if not exists, otherwise no value
+					if(alreadyExists) return console.log('skipping '+savePathFile);
+					}
 
 				await fs.promises.mkdir(path.dirname(destinationPath), { recursive: true });
 
