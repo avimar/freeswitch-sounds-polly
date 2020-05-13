@@ -1,0 +1,6 @@
+ascii
+phonetic-ascii
+digits
+currency
+time
+base256

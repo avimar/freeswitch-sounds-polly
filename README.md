@@ -1,6 +1,14 @@
-# Install instructions
+# Install instructions for English US Matthew
 1. Download or clone this repository, e.g. `git clone https://github.com/avimar/freeswitch-sounds-polly.git`
-1. Copy Matthew-neural to your sounds path, e.g. debian: `cp -r freeswitch-sounds-polly/Matthew-neural /usr/share/freeswitch/sounds/en/us/matthew`
+1. Ensure the new folder is available: `mkdir /usr/share/freeswitch/sounds/en/us/matthew`
+1. Copy Matthew-neural (or Matthew-standard) to your sounds path, e.g. debian: `cp -r freeswitch-sounds-polly/Matthew-neural /usr/share/freeswitch/sounds/en/us/matthew`
+	* For a mix of neural for phrases and standard for single-words use this:
+	* `cd freeswitch-sounds-polly;`
+	* `rsync -av --exclude-from=better-as-standard Matthew-neural/ /usr/share/freeswitch/sounds/en/us/matthew;`
+	* `rsync -av --exclude-from=better-as-neural Matthew-standard/ /usr/share/freeswitch/sounds/en/us/matthew;`
+	
+
+
 1. To ensure not just phrases and sounds, but also mod_say_en uses the new voice, make sure it allows you to specify a path dynamically. Edit `/usr/share/freeswitch/lang/en/en.xml` and remove `sound-prefix="$${sound_prefix}"`. There doesn't seem to be any downside. The default is still set in `vars.xml`
 1. To switch the default voice:
 	* For your entire system -- edit `/etc/freeswitch/vars.xml`
