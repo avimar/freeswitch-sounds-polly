@@ -135,6 +135,10 @@ process.on('exit', function (){
 //each category is an array, with objects of:  phrase & filename { phrase: 'And', filename: 'and' }
 const allPhrases = require('./load-phrases-xml.js')('./phrases_en.xml');
 const allTypes = Object.keys(allPhrases);
+//[ 'ascii','phonetic-ascii','digits','currency','time','voicemail','directory','conference','ivr','misc','base256','zrtp' ]
+//Long phrases that neural is good for: [ 'voicemail','directory','conference','ivr','misc','zrtp' ]
+//The rest that standard might be better for:  [ 'ascii','phonetic-ascii','digits','currency','time',base256' ]
+
 //list = [{phrase:"For information about FreeSWITCH, press", filename:"misc-information_about_freeswitch"}];
 //list = [{phrase:'<speak>Some audio is difficult to hear in a moving vehicle, but <amazon:effect name="drc"> this audio is less difficult to hear in a moving vehicle.</amazon:effect> </speak>', filename:"test-drc"}];
 
