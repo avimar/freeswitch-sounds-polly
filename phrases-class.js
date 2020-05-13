@@ -29,4 +29,8 @@ module.exports = [
 ,{filename: "all-students-muted", phrase: "All students are now muted."}
 ,{filename: "line-open", phrase: "Line is now open."}
 ,{filename: "line-closed", phrase: "Line is now closed."}
+
+,{filename: "call-ends-five-minutes", phrase: "5 minutes until this call ends."}
+,{filename: "call-ends-one-minute", phrase: "1 minute until this call ends."}
+,{filename: "call-ends-now", phrase: "This conference is now over. Goodbye."}
 ];
