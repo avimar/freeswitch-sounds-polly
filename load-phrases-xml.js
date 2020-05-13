@@ -21,6 +21,15 @@ function parseFile(file){
 		jsonObj[value] = jsonObj[value].prompt;
 		})
 
+	keys.forEach(function(value){//if we specified a "polly" attribute, then overwrite the phrase.
+		jsonObj[value].forEach(function(val,index){
+			if(val.polly) {
+				console.log('overwriting standard text with polly specific text:',jsonObj[value][index]['phrase'],"=>",val.polly);
+				jsonObj[value][index]['phrase']=val.polly;
+				}
+			})
+		})
+
 	//remove where there's at type -- music or tone.
 	jsonObj.conference = jsonObj.conference.filter(data => !data.type);
 
