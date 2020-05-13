@@ -4,8 +4,8 @@
 1. Copy Matthew-neural (or Matthew-standard) to your sounds path, e.g. debian: `cp -r freeswitch-sounds-polly/Matthew-neural /usr/share/freeswitch/sounds/en/us/matthew`
 	* For a mix of neural for phrases and standard for single-words use this:
 	* `cd freeswitch-sounds-polly;`
-	* `rsync -av --exclude-from=better-as-standard Matthew-neural/ /usr/share/freeswitch/sounds/en/us/matthew;`
-	* `rsync -av --exclude-from=better-as-neural Matthew-standard/ /usr/share/freeswitch/sounds/en/us/matthew;`
+	* `rsync -av --exclude-from=better-as-standard.txt Matthew-neural/ /usr/share/freeswitch/sounds/en/us/matthew;`
+	* `rsync -av --exclude-from=better-as-neural.txt Matthew-standard/ /usr/share/freeswitch/sounds/en/us/matthew;`
 	
 
 
