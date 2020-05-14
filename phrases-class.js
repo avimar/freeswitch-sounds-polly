@@ -33,4 +33,6 @@ module.exports = [
 ,{filename: "call-ends-five-minutes", phrase: "5 minutes until this call ends."}
 ,{filename: "call-ends-one-minute", phrase: "1 minute until this call ends."}
 ,{filename: "call-ends-now", phrase: "This conference is now over. Goodbye."}
+
+,{filename: "choose-live-or-recordings", phrase: "Welcome. For the live class, press 0 and pound. To access the recordings, enter the recording number and then press pound."}
 ];
