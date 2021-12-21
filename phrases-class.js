@@ -1,5 +1,6 @@
 module.exports = [
 {filename: "enter-class-number", phrase: "Please enter your class number, followed by the pound key."}
+,{filename: "enter-recording-number", phrase: "Please enter the recording number"}
 ,{filename: "enter-class-number-7", phrase: "Please enter your 7 digit class number."}
 ,{filename: "bad-class-number", phrase: "Invalid class number, please try again."}
 
