@@ -15,7 +15,7 @@
 		* replace `<X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>`
 		* with `<X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/mattew"/>`
 	* For just one channel, set:
-		* `<action application="set" data="sound_prefix=$${sounds_dir}/en/us/matthew-reg/" />`
+		* `<action application="set" data="sound_prefix=$${sounds_dir}/en/us/matthew-reg" />`
 
 
 
