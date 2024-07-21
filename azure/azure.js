@@ -118,7 +118,7 @@ function getAccessToken(subscriptionKey) {
 
 function generatePath(file, folder, hz){
 	const extension='.wav';
-	var savePathFile = 'avri/';
+	var savePathFile = 'he-avri/';
 	if(folder) savePathFile = savePathFile + folder + '/';//add folder if we set one
 	//if(hz==24000) hz=32000;
 	savePathFile = savePathFile + hz+'/'+ file + extension;
@@ -140,7 +140,7 @@ async function textToSpeech(accessToken, text, saveAs, folder) {
 		//.att('xml:lang', 'he-il').att('xml:gender', 'Male')
 		.att('name', 'he-IL-AvriNeural')
 		//.att('name','en-GB-George-Apollo')
-		//.ele('prosody').att('rate','-25%') Hebrew is very fast!
+		.ele('prosody').att('rate','+20%')
 		//.att('name', 'Microsoft Server Speech Text to Speech Voice (en-US, Guy24KRUS)')
         .txt(text)
         .end();
