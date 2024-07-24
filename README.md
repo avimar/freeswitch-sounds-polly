@@ -6,7 +6,10 @@
 	* `cd freeswitch-sounds-polly;`
 	* `rsync -av --exclude-from=better-as-standard.txt Matthew-neural/ /usr/share/freeswitch/sounds/en/us/matthew;`
 	* `rsync -av --exclude-from=better-as-neural.txt Matthew-standard/ /usr/share/freeswitch/sounds/en/us/matthew;`
-	
+
+1. For Hebrew:
+	* `mkdir -p /usr/share/freeswitch/sounds/he/avri`
+	* `cp -r freeswitch-sounds-polly/he-avri /usr/share/freeswitch/sounds/he/avri`
 
 
 1. To ensure not just phrases and sounds, but also mod_say_en uses the new voice, make sure it allows you to specify a path dynamically. Edit `/usr/share/freeswitch/lang/en/en.xml` and remove `sound-prefix="$${sound_prefix}"`. There doesn't seem to be any downside. The default is still set in `vars.xml`
@@ -16,7 +19,8 @@
 		* with `<X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/mattew"/>`
 	* For just one channel, set:
 		* `<action application="set" data="sound_prefix=$${sounds_dir}/en/us/matthew-reg" />`
-
+	* For hebrew just one channel, set:
+		* `<action application="set" data="sound_prefix=$${sounds_dir}/he/il/avri" />`
 
 
 # Information
