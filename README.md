@@ -9,7 +9,7 @@
 
 1. For Hebrew:
 	* `mkdir -p /usr/share/freeswitch/sounds/he/avri`
-	* `cp -r freeswitch-sounds-polly/he-avri /usr/share/freeswitch/sounds/he/avri`
+	* `cp -r freeswitch-sounds-polly/he-avri/* /usr/share/freeswitch/sounds/he/avri`
 
 
 1. To ensure not just phrases and sounds, but also mod_say_en uses the new voice, make sure it allows you to specify a path dynamically. Edit `/usr/share/freeswitch/lang/en/en.xml` and remove `sound-prefix="$${sound_prefix}"`. There doesn't seem to be any downside. The default is still set in `vars.xml`
