@@ -177,6 +177,7 @@ async function textToSpeech(accessToken, text, saveAs, folder) {
 				const saveFileStream = request.pipe(fs.createWriteStream(savePath));//.pipe(PassThrough)
 				//saveFileStream.pipe(fs.createWriteStream(savePath));
 				saveFileStream.on('close',async function(){
+					//console.log('\nYour file is ready.\n')
 					const command1 = `sox ${savePath} ${savePath16} rate 16000 silence 1 0.0 0% reverse silence 1 0.0 0% reverse`;
 					const command2 =   `sox ${savePath} ${savePath8} rate 8000 silence 1 0.0 0% reverse silence 1 0.0 0% reverse`;
 					console.log(command1);
@@ -233,8 +234,11 @@ async function main() {
 		//["30", "שְׁלוֹשִׁים"]
 
 	];
-	//convert = require('./he-digits');
-	convert = require('./he-currency');
+	var path= 'digits';
+
+	convert = require('./he-digits');path = 'digits';
+	//convert = require('./he-currency'); path='currency';
+
     try {
 		const accessToken = await getAccessToken(subscriptionKey);
 		//console.log(accessToken);
@@ -245,7 +249,7 @@ async function main() {
 
 		await Promise.mapSeries(convert, async function(arg){
 			//console.log(arg)
-			await textToSpeech(accessToken,arg[0],arg[1],'currency');
+			await textToSpeech(accessToken,arg[0],arg[1],path);
 			})
         //await textToSpeech(accessToken, text, 'saveName');
     } catch (err) {
