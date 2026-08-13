@@ -1,0 +1,8 @@
+<configuration name="tts_commandline.conf" description="TTS Command Line">
+  <synth name="polly">
+    <parameter name="path" value="aws polly synthesize-speech --output-format pcm --voice-id $voice_id --engine neural --text $text $file"/>
+    <parameter name="format" value="raw"/>
+    <parameter name="rate" value="16000"/>
+    <parameter name="voice" value="Matthew"/>
+  </synth>
+</configuration>
