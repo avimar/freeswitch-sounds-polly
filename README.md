@@ -42,6 +42,12 @@ Tips from building this set:
 - The "and" prefixes (`digits/va`, `ve`, `uu`) are recorded alone. Cutting them from the front of a whole word sounded worse.
 - `node azure/generate-he.js retrim` rebuilds the 16000 and 8000 copies from 24000.
 
+Azure terms (checked 2026-09-24, [Product Terms](https://www.microsoft.com/licensing/terms/productoffering/MicrosoftAzure/allprograms), Foundry Tools > Text-to-Speech):
+- **Output use needs the paid tier.** "For Customers of the paid tier TTS Service only, Customer may use the audio output of prebuilt neural voices ... including for commercial purposes." The free tier (F0) gets no output rights. Some older files may have been made on the free trial; the tier was not checked. Check the Speech resource's pricing tier before relying on this set.
+- **No training.** "Customer will not use and will not allow third parties to use ... data from Foundry Tools to create, train, or improve ... a similar or competing product or service." So an open license like CC BY-SA (which allows anything) does not fit.
+- **Disclose it is synthetic** ([AI Code of Conduct](https://learn.microsoft.com/en-us/legal/ai-code-of-conduct)).
+- Not offered to [freeswitch/freeswitch-sounds](https://github.com/freeswitch/freeswitch-sounds) for now. That would need: paid tier, regenerate at 48000 (their masters), a license with the no-training limit, and their OK for a set that covers only mod_say_he.
+
 # Information
 Goal: Generate FreeSWITCH sound files using Amazon Polly.
 
