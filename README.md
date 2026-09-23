@@ -7,9 +7,7 @@
 	* `rsync -av --exclude-from=better-as-standard.txt Matthew-neural/ /usr/share/freeswitch/sounds/en/us/matthew;`
 	* `rsync -av --exclude-from=better-as-neural.txt Matthew-standard/ /usr/share/freeswitch/sounds/en/us/matthew;`
 
-1. For Hebrew:
-	* `mkdir -p /usr/share/freeswitch/sounds/he/avri`
-	* `cp -r freeswitch-sounds-polly/he-avri/* /usr/share/freeswitch/sounds/he/avri`
+1. For Hebrew, see [Hebrew (Israel) - Avri](#hebrew-israel---avri) below.
 
 
 1. To ensure not just phrases and sounds, but also mod_say_en uses the new voice, make sure it allows you to specify a path dynamically. Edit `/usr/share/freeswitch/lang/en/en.xml` and remove `sound-prefix="$${sound_prefix}"`. There doesn't seem to be any downside. The default is still set in `vars.xml`
@@ -22,6 +20,27 @@
 	* For hebrew just one channel, set:
 		* `<action application="set" data="sound_prefix=$${sounds_dir}/he/il/avri" />`
 
+
+# Hebrew (Israel) - Avri
+`he-avri/` is a Hebrew set for `mod_say_he`: every file it plays for numbers, currency (shekel/agorot) and time, plus a few `ivr` prompts. The voice is Azure `he-IL-AvriNeural` (Polly has no Hebrew voice), at 8000, 16000 and 24000 Hz.
+
+Install:
+1. Copy it to your sounds path, e.g. debian: `mkdir -p /usr/share/freeswitch/sounds/he/il && cp -r he-avri /usr/share/freeswitch/sounds/he/il/avri`
+1. In `lang/he/he.xml`, point the language at it: `<language name="he" say-module="he" sound-prefix="$${sounds_dir}/he/il/avri">`
+1. Use a `mod_say_he` with the grammar fixes from [signalwire/freeswitch#3186](https://github.com/signalwire/freeswitch/pull/3186). The older module says some numbers wrong (extra or missing "and", "שניים מיליון", "שעה שלוש" for 3 hours).
+
+Every file was checked by ear, joined in the order `mod_say_he` plays them.
+
+Generate more files in the same voice:
+1. Put `azure_key` and `azure_region` in `creds.ini`, and run `npm install`. You also need `ffmpeg` on PATH.
+1. Write a list of `[text, file name, folder, rate]` rows, like [`azure/he-say-missing.js`](azure/he-say-missing.js). Rate is optional; the default is `+20%`, which the whole set uses.
+1. `node azure/generate-he.js make <your-list.js>`. It saves the 24000 file as Azure returns it, and trimmed 16000 and 8000 copies. Existing files are skipped.
+
+Tips from building this set:
+- Write the text with nikkud. Plain spelling sometimes reads better (`דקות`, `שתיים`), so try both.
+- Listen to a new file joined to its neighbours, not alone. [`azure/he-say-variants.js`](azure/he-say-variants.js) has the retakes and which one was chosen.
+- The "and" prefixes (`digits/va`, `ve`, `uu`) are recorded alone. Cutting them from the front of a whole word sounded worse.
+- `node azure/generate-he.js retrim` rebuilds the 16000 and 8000 copies from 24000.
 
 # Information
 Goal: Generate FreeSWITCH sound files using Amazon Polly.
